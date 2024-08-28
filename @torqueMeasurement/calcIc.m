@@ -1,4 +1,5 @@
 function result = calcIc(obj)
+
 cleanAngle = obj.angle(obj.leftCutoff:obj.rightCutoff);
 cleanLoad = obj.loadcell(obj.leftCutoff:obj.rightCutoff);
 cleanField = obj.field(obj.leftCutoff:obj.rightCutoff);
@@ -84,6 +85,9 @@ ic2 = ic2./(mean(cleanField).*cosd(x)');
 %plot(x,ic2,'k',"LineWidth",4);
 %xlim([-60,60]);
 %hold off;
-result.angle = cleanAngle;
-result.ic = ic2';
+
+result.angle = cleanAngle(cleanAngle>-30 & cleanAngle<30);
+result.angle = linspace(min(result.angle),max(result.angle))';
+z = @(x) interp1(cleanAngle,ic2,x).*1000;
+result.ic = z(result.angle);
 end
